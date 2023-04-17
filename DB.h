@@ -1,6 +1,5 @@
 #ifndef _DB_H_
 #define _DB_H_
-#include "DB.h"
 
 #include <cstdlib>
 #include <stdlib.h>
@@ -17,50 +16,20 @@ class DB {
 private:
     const std::string server = "localhost";
     const std::string username = "root";
-    const std::string password = "Enter mysql password here";
-    static DB *instance_ptr;
+    const std::string password = "Enter password here";
+    static DB* instance_ptr;
 
-    sql::Driver *driver;
-    sql::Connection *con;
+    sql::Driver* driver;
+    sql::Connection* con;
 
-    DB() {
-        driver = get_driver_instance();
-        con = driver->connect(server, username, password);
-        con->setSchema("medicaldatabase");       //Set the database name
-    }
+    DB();
 
 public:
     DB(const DB& obj) = delete;
-
-    static DB* getInstance() {
-        if (instance_ptr == NULL) {
-            try {
-                instance_ptr = new DB();
-            }
-            catch (sql::SQLException e) {
-                std::cout << "Could not connect to server. Error message: " << e.what() << std::endl;
-                system("pause");
-                exit(1);
-            }
-            return instance_ptr;
-        }
-        else {
-            return instance_ptr;
-        }
-
-    }
-
-    sql::Connection* connection() {
-        return con;
-    }
-
-    sql::PreparedStatement *getPreparedStatement(std::string sql) {
-        return con->prepareStatement(sql);
-    }
-
-    sql::Statement* getCreateStatement() {
-        return con->createStatement();
-    }
+    static DB* getInstance();
+    sql::Connection* connection();
+    sql::PreparedStatement* getPreparedStatement(std::string sql);
+    sql::Statement* getCreateStatement();
 };
 
 #endif
